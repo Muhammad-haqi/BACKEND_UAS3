@@ -37,7 +37,7 @@ model User {
   password    String
   namaLengkap String
 
-  // 🚀 BARIS BARU: Menambahkan peran (role) dengan nilai default "user"
+  
   role        String   @default("user")
 
   pesanan Pesanan[]
