@@ -1,5 +1,3 @@
-// src/routes/pesananRoutes.js (COMMONJS)
-
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const verifyToken = require("../middlewares/verifyToken.js");
@@ -8,27 +6,26 @@ const isAdmin = require("../middlewares/isAdmin.js");
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// =================== CREATE PESANAN (POST /) ===================
+
 router.post("/", verifyToken, async (req, res) => {
     try {
-        // 🔑 Ambil userId yang aman dan sudah diverifikasi dari token
-        // Asumsi verifyToken menempelkan data token di req.user
+       
         const userIdFromToken = req.user.userId; 
 
-        // 🚨 Hapus userId dari body (payload) karena kita sudah punya yang lebih aman dari token.
+       
         const { userId, ...data } = req.body; 
 
         const newOrder = await prisma.pesanan.create({
             data: {
-                ...data, // Semua data dari frontend
-                userId: userIdFromToken, // 🔑 Gunakan userId yang valid dari token
+                ...data, 
+                userId: userIdFromToken, 
                 tanggalOrder: data.tanggalOrder ?? new Date().toISOString(),
                 status: "Menunggu Pembayaran", 
-                paid: false, // Asumsi pesanan baru belum dibayar
+                paid: false, 
             },
         });
 
-        res.status(201).json({ // Menggunakan 201 Created untuk POST
+        res.status(201).json({ 
             success: true,
             message: "Pesanan berhasil dibuat",
             order: newOrder,
@@ -39,10 +36,10 @@ router.post("/", verifyToken, async (req, res) => {
     }
 });
 
-// =================== GET PESANAN USER (GET /riwayat) ===================
+
 router.get("/riwayat", verifyToken, async (req, res) => {
     try {
-        const userId = req.user.userId; // Mengambil userId dari token
+        const userId = req.user.userId; 
 
         const allOrders = await prisma.pesanan.findMany({
             where: { userId },
@@ -56,12 +53,12 @@ router.get("/riwayat", verifyToken, async (req, res) => {
     }
 });
 
-// =================== DELETE PESANAN (DELETE /:id) ===================
+
 router.delete("/:id", verifyToken, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
 
-        // Opsi: Tambahkan logika otorisasi untuk memastikan pengguna hanya bisa menghapus pesanannya sendiri
+        
         
         const deleted = await prisma.pesanan.delete({
             where: { id },
@@ -78,12 +75,12 @@ router.delete("/:id", verifyToken, async (req, res) => {
     }
 });
 
-// =================== UPDATE PESANAN (PUT /:id) ===================
+
 router.put("/:id", verifyToken, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
 
-        // Opsi: Tambahkan logika otorisasi jika pesanan bukan milik pengguna
+       
         
         const updated = await prisma.pesanan.update({
             where: { id },
@@ -101,8 +98,8 @@ router.put("/:id", verifyToken, async (req, res) => {
     }
 });
 
-// =================== ADMIN: GET SEMUA PESANAN (GET /admin/all) ===================
-router.get("/admin/all", verifyToken, isAdmin, async (req, res) => { // Pastikan verifyToken ada sebelum isAdmin
+
+router.get("/admin/all", verifyToken, isAdmin, async (req, res) => { 
     try {
         const allOrders = await prisma.pesanan.findMany({
             orderBy: { id: "desc" },
@@ -116,4 +113,5 @@ router.get("/admin/all", verifyToken, isAdmin, async (req, res) => { // Pastikan
 });
 
 // KUNCI: Export sebagai CommonJS
+
 module.exports = router;
