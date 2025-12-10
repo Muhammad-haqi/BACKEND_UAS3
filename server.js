@@ -1,10 +1,8 @@
-// server.js (FINAL CommonJS)
-
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
-// Menggunakan require()
+
 const pesananRoutes = require("./src/routes/pesananRoutes.js");
 const authRoutes = require("./src/routes/authRoutes.js");
 
@@ -21,5 +19,6 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/pesanan", pesananRoutes);
 
-// KUNCI: Export sebagai CommonJS
+
+
 module.exports = app;
