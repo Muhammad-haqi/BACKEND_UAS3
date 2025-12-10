@@ -1,15 +1,13 @@
-// src/controllers/authController.js (FIXED CommonJS)
-
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const prisma = new PrismaClient();
 
-// Ambil dari Environment Variable Vercel
+
 const GLOBAL_JWT_SECRET = process.env.JWT_SECRET || 'skyfly_kunci_rahasia_anda_harus_panjang'; 
 
-// Fungsi untuk Registrasi User
+
 const register = async (req, res) => {
     const { identifier, password, namaLengkap } = req.body;
 
@@ -70,7 +68,7 @@ const register = async (req, res) => {
     }
 };
 
-// Fungsi untuk Login User
+
 const login = async (req, res) => {
     const { identifier, password } = req.body; 
 
@@ -120,8 +118,9 @@ const login = async (req, res) => {
     }
 };
 
-// KUNCI: Mengekspor semua fungsi sebagai objek CommonJS
+
 module.exports = {
     register,
     login
+
 };
